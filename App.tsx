@@ -13,10 +13,13 @@ import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import SplashScreen from "./src/screens/SplashScreen";
 import AuthNavigator from "./src/navigators/AuthNavigator";
 import MainNavigator from "./src/navigators/MainNavigator";
+import { Provider, useSelector } from "react-redux";
+import { authSelector } from "./src/reduxs/reducers/authReducers";
+import store from "./src/reduxs/store";
 const App = ()=>{
   const [isShowSplash, setIsShowSplash] = useState(true);
   const [accessToken, setAccessToken] = useState('');
-  const {getItem,setItem} = useAsyncStorage('assetToken')
+  const {getItem,setItem} = useAsyncStorage('auth')
   useEffect(()=>{
     const timeout = setTimeout(()=>{
       setIsShowSplash(false)
@@ -32,13 +35,15 @@ const App = ()=>{
   }
   return (
     <>
-      <StatusBar
-        barStyle={'dark-content'}
-        translucent
-        backgroundColor={'transparent'}/>
-        {isShowSplash ? <SplashScreen /> :<NavigationContainer>
-        {accessToken ? <MainNavigator/> : <AuthNavigator />}
-      </NavigationContainer> }
+    <Provider store={store}>
+        <StatusBar
+          barStyle={'dark-content'}
+          translucent
+          backgroundColor={'transparent'}/>
+          {isShowSplash ? <SplashScreen /> :<NavigationContainer>
+          {accessToken ? <MainNavigator/> : <AuthNavigator />}
+        </NavigationContainer> }
+      </Provider>
     </>
   )
 }

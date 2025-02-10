@@ -1,11 +1,11 @@
 import React from 'react';
 import {ActivityIndicator, Image, ImageBackground, Text, TouchableOpacity, View} from 'react-native';
 import {appInfo} from '../constants/appInfos';
-import {SpaceComponent} from '../components';
+import {SpaceComponent, TextComponent} from '../components';
 import {appColors} from '../constants/appColors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}:any) => {
   return (
       <View style={{justifyContent:'center',alignItems:'center',flex:1}}>
             <Text>
@@ -14,9 +14,9 @@ const HomeScreen = () => {
             <TouchableOpacity onPress={async ()=>{
                 await AsyncStorage.clear()
             }}>
-               <Text style={{color:'blue'}}>
-                    Logout
-               </Text>
+               <TouchableOpacity onPress={()=>navigation.navigate('ProfileScreen')}>
+                    <TextComponent text='Xem trang hồ sơ' color='blue'/>
+               </TouchableOpacity>
             </TouchableOpacity>
         </View>
   );
