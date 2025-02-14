@@ -11,6 +11,7 @@ const LoginScreen = ({navigation}: any) => {
     const [password, setPassword] = useState('');
     const [isRemember, setIsRemember] = useState(true);
     const [isDisable, setIsDisable] = useState(true);
+
     useEffect(() => {
         const emailValidation = Validate.email(email);
     
