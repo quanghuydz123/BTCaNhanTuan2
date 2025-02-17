@@ -6,6 +6,8 @@ import {
     StyleSheet,
     TextInputProps,
     KeyboardType,
+    StyleProp,
+    ViewStyle,
   } from 'react-native';
   import React, {ReactNode, useState} from 'react';
   import {Touchable} from 'react-native';
@@ -25,6 +27,8 @@ import {
     allowClear?: boolean;
     type?: KeyboardType;
     onEnd?: () => void;
+    styles?: StyleProp<ViewStyle>;
+    
   }
   
   const InputComponent = (props: Props) => {
@@ -38,15 +42,16 @@ import {
       allowClear,
       type,
       onEnd,
+      styles
     } = props;
   
     const [isShowPass, setIsShowPass] = useState(isPassword ?? false);
   
     return (
-      <View style={[styles.inputContainer]}>
+      <View style={[styleSheet.inputContainer,styles]}>
         {affix ?? affix}
         <TextInput
-          style={[styles.input, globalStyles.text]}
+          style={[styleSheet.input, globalStyles.text]}
           value={value}
           placeholder={placeholder ?? ''}
           onChangeText={val => onChange(val)}
@@ -80,7 +85,7 @@ import {
   
   export default InputComponent;
   
-  const styles = StyleSheet.create({
+  const styleSheet = StyleSheet.create({
     inputContainer: {
       flexDirection: 'row',
       borderRadius: 12,
