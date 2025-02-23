@@ -17,22 +17,7 @@ import { Provider, useSelector } from "react-redux";
 import { authSelector } from "./src/reduxs/reducers/authReducers";
 import store from "./src/reduxs/store";
 const App = ()=>{
-  const [isShowSplash, setIsShowSplash] = useState(true);
-  const [accessToken, setAccessToken] = useState('');
-  const {getItem,setItem} = useAsyncStorage('auth')
-  useEffect(()=>{
-    const timeout = setTimeout(()=>{
-      setIsShowSplash(false)
-    },1500)
-    return ()=>clearTimeout(timeout)
-  },[])
-  useEffect(()=>{
-    checkLogin()
-  },[])
-  const checkLogin = async ()=>{
-    const token = await getItem()
-    token && setAccessToken(token)
-  }
+ 
   return (
     <>
     <Provider store={store}>
@@ -40,9 +25,7 @@ const App = ()=>{
           barStyle={'dark-content'}
           translucent
           backgroundColor={'transparent'}/>
-          {isShowSplash ? <SplashScreen /> :<NavigationContainer>
-          {accessToken ? <MainNavigator/> : <AuthNavigator />}
-        </NavigationContainer> }
+          <AppRouter />
       </Provider>
     </>
   )

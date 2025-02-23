@@ -6,12 +6,14 @@ import { appColors } from '../constants/appColors';
 import { Validate } from '../utils/validate';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Fontisto from 'react-native-vector-icons/Fontisto'
+import { useDispatch } from 'react-redux';
+import { addAuth } from '../reduxs/reducers/authReducers';
 const LoginScreen = ({navigation}: any) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isRemember, setIsRemember] = useState(true);
     const [isDisable, setIsDisable] = useState(true);
-
+    const dispatch = useDispatch()
     useEffect(() => {
         const emailValidation = Validate.email(email);
     
@@ -22,6 +24,7 @@ const LoginScreen = ({navigation}: any) => {
         }
       }, [email, password]);
     const handleLogin = async ()=>{
+        dispatch(addAuth({accesstoken:'huy',id:'',email:''}))
         await AsyncStorage.setItem('auth','huy')
     }
     return (

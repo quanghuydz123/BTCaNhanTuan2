@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, ImageBackground, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, ImageBackground, ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { appInfo } from '../constants/appInfos';
 import { ButtonComponent, CardComponent, InputComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '../components';
 import { appColors } from '../constants/appColors';
@@ -15,10 +15,18 @@ import eventAPI from '../apis/eventAPI';
 import { renderPrice } from '../utils/convertMoney';
 import { DateTime } from '../utils/DateTime';
 import Feather from 'react-native-vector-icons/Feather'
+import { useDispatch } from 'react-redux';
+import { removeAuth } from '../reduxs/reducers/authReducers';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import EventItemHorizontal from '../components/EventItemHorizontal';
+import Swiper from 'react-native-swiper';
 const HomeScreen = ({ navigation }: any) => {
+    const [isLoadingEvents, setIsLoadingEvents] = useState(true)
     const [categories, setCategories] = useState<CategoryModel[]>([])
     const [events, setEvents] = useState<EventModelNew[]>([])
+    const [index, setIndex] = useState(0);
     const [search, setSearch] = useState('')
+    const dispatch = useDispatch()
     useEffect(() => {
         handleCallAPIGetCategories()
         handleCallAPIGetEvents()
@@ -37,12 +45,15 @@ const HomeScreen = ({ navigation }: any) => {
     }
     const handleCallAPIGetEvents = async () => {
         try {
-            const api = apis.event.getAll({ limit: '10' })
+            setIsLoadingEvents(true)
+            const api = apis.event.getAll({ limit: '10',sortType:'view' })
             const res = await eventAPI.HandleEvent(api)
             if (res && res.data && res.status === 200) {
                 setEvents(res.data)
             }
+            setIsLoadingEvents(false)
         } catch (error: any) {
+            setIsLoadingEvents(false)
             const errorMessage = JSON.parse(error.message)
             console.log('Lỗi rồi MapSceen', errorMessage)
         }
@@ -51,21 +62,58 @@ const HomeScreen = ({ navigation }: any) => {
         <View style={{ flex: 1, backgroundColor: appColors.backgroundBluishWhite }}>
             <View style={{ backgroundColor: appColors.primary, paddingTop: 35 }}>
                 <RowComponent justify='space-between' styles={{ paddingHorizontal: 12, paddingVertical: 8 }}>
+                    <Ionicons name='arrow-back' size={32} color={appColors.white} />
                     <InputComponent
                         placeholder='Tìm kiếm ở đây...'
-                        affix={<FontAwesome name='search' size={30} />}
-                        styles={{ width: '80%', marginBottom: 0, borderRadius: 100, maxHeight: 56 }} value={search} onChange={(val) => setSearch(val)} />
+                        affix={<FontAwesome name='search' size={20} />}
+                        styles={{ width: '70%', marginBottom: 0, borderRadius: 100, minHeight: 40 }} value={search} onChange={(val) => setSearch(val)} />
                     <RowComponent>
                         <FontAwesome name='bell' size={20} color={appColors.white} />
                         <SpaceComponent width={12} />
-                        <AvatarItem size={36} />
+                        <AvatarItem size={36} photoUrl='https://yt3.googleusercontent.com/c-Z7mIlntSpG6VyQ5ZqaPggqkZRhaySr-H5ZEazFN2iR1pP4eD1UGekwu0y--c4CSVhJJ1A4QT8=s900-c-k-c0x00ffffff-no-rj' />
                     </RowComponent>
                 </RowComponent>
             </View>
-            <SpaceComponent height={12} />
-            <View>
+            <ScrollView>
+                <View >
+                    <Swiper
+                        style={{height:appInfo.sizes.HEIGHT*0.3}}
+                        loop={false}
+                        onIndexChanged={num => setIndex(num)}
+                        index={index}
+                        activeDotColor={appColors.primary}>
+                        <Image
+                            source={{ uri: 'https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2F99%2F38%2F15%2F19919dffe776b8990327c2c461750391.jpg&w=640&q=75' }}
+                            style={{
+                                flex: 1,
+                                width: appInfo.sizes.WIDTH,
+                                height: appInfo.sizes.HEIGHT * 0.3,
+                                resizeMode: 'stretch',
+                            }}
+                        />
+                        <Image
+                            source={{ uri: 'https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2F51%2Fb4%2F2f%2F753fa09de83c3b675867be409387e713.jpg&w=640&q=75' }}
+                            style={{
+                                flex: 1,
+                                width: appInfo.sizes.WIDTH,
+                                height: appInfo.sizes.HEIGHT * 0.3,
+                                resizeMode: 'stretch',
+                            }}
+                        />
+                        <Image
+                            source={{ uri: 'https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F608%2F332%2Fts%2Fds%2F3b%2F46%2Fbd%2Fed98627eac28dbc62a3246764a0d68a9.jpg&w=640&q=75' }}
+                            style={{
+                                flex: 1,
+                                width: appInfo.sizes.WIDTH,
+                                height: appInfo.sizes.HEIGHT * 0.3,
+                                resizeMode: 'stretch',
+                            }}
+                        />
+                    </Swiper>
+                </View>
+                <SpaceComponent height={12}/>
                 <SectionComponent >
-                    <TextComponent text='Danh sách thể loại' size={24} />
+                    <TextComponent text='Danh sách thể loại' size={20} />
                     <SpaceComponent height={12} />
                     <FlatList
                         data={categories}
@@ -84,17 +132,20 @@ const HomeScreen = ({ navigation }: any) => {
                 </SectionComponent>
 
                 <SectionComponent >
-                    <TextComponent text='Danh sách các sản phẩm bán chạy' size={24} />
+                    <TextComponent text='Danh sách các sản phẩm bán chạy' size={20} />
                     <SpaceComponent height={12} />
                     <FlatList
                         data={events}
                         horizontal
+                        ListEmptyComponent={<View style={{ height: appInfo.sizes.HEIGHT * 0.3, justifyContent: 'center', alignItems: 'center' }}>
+                            <ActivityIndicator style={{ width: appInfo.sizes.WIDTH * 0.9 }} />
+                        </View>}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => {
                             return (
                                 <>
-                                    <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.65, height: appInfo.sizes.HEIGHT * 0.3 }}>
-                                        <Image source={{ uri: item.photoUrl }} style={{ width: appInfo.sizes.WIDTH * 0.45, height: appInfo.sizes.HEIGHT * 0.14, borderRadius: 12, resizeMode: 'stretch' }} />
+                                    <CardComponent styles={{ width: appInfo.sizes.WIDTH * 0.65, height: appInfo.sizes.HEIGHT * 0.3, padding: 8, margin: 0 }}>
+                                        <Image source={{ uri: item.photoUrl }} style={{ width: 'auto', height: appInfo.sizes.HEIGHT * 0.16, borderRadius: 12, resizeMode: 'stretch' }} />
                                         {item.statusEvent === 'Ended' && <View style={{
                                             position: 'absolute',
                                             right: 0,
@@ -136,19 +187,42 @@ const HomeScreen = ({ navigation }: any) => {
                                         </View>
 
                                     </CardComponent>
+                                    <SpaceComponent width={12} />
                                 </>
 
                             )
                         }}
                     />
                 </SectionComponent>
+                <SectionComponent >
+                    <RowComponent justify='space-between'>
+                        <TextComponent text='Danh sách sản phẩm lazyLoading' size={20} />
+                        <TouchableOpacity onPress={() => navigation.navigate('LazyLoadingScreen')}>
+                            <Text style={{ color: appColors.primary }}> Xem tất cả</Text>
+                        </TouchableOpacity>
+                    </RowComponent>
+                    <SpaceComponent height={12} />
+                    {isLoadingEvents ? <View style={{ height: appInfo.sizes.HEIGHT * 0.3, justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator style={{ width: appInfo.sizes.WIDTH * 0.9 }} />
+                    </View> : events.slice(0, 5).map((item) => {
+                        return (
+                            <>
+                                <EventItemHorizontal key={item._id} item={item} />
+                                <SpaceComponent height={12} />
+                            </>
+                        )
+                    })}
+                </SectionComponent>
                 <View>
                     <ButtonComponent text='Xem hồ sơ' onPress={() => navigation.navigate('ProfileScreen')} type='primary' />
                 </View>
                 <View>
-                    <ButtonComponent text='Đăng xuất' onPress={() => AsyncStorage.clear()} type='primary' />
+                    <ButtonComponent text='Đăng xuất' onPress={() => {
+                        dispatch(removeAuth({}))
+                        AsyncStorage.clear()
+                    }} type='primary' />
                 </View>
-            </View>
+            </ScrollView>
         </View>
     );
 };

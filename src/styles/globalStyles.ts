@@ -66,6 +66,6 @@ export const globalStyles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     backgroundColor: appColors.white,
-    margin: 12,
+    margin: 0,
   },
 });

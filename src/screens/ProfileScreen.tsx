@@ -11,7 +11,7 @@ const ProfileScreen = ()=>{
     const [address, setAddress] = useState('Thủ Đức');
 
     return (
-        <ContainerComponent back title="Hồ sơ">
+        <ContainerComponent back title="Hồ sơ" >
            <SectionComponent>
                 <View style={{justifyContent:'center',alignItems:'center'}}>
                     <TouchableOpacity>
