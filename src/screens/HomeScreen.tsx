@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }: any) => {
     const handleCallAPIGetEvents = async () => {
         try {
             setIsLoadingEvents(true)
-            const api = apis.event.getAll({ limit: '10',sortType:'view' })
+            const api = apis.event.getAll({ limit: '10'})
             const res = await eventAPI.HandleEvent(api)
             if (res && res.data && res.status === 200) {
                 setEvents(res.data)

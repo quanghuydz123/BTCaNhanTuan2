@@ -51,13 +51,15 @@ const EventItemHorizontal = (props: Props) => {
 
                     <TextComponent numberOfLine={1} text={item?.title} title size={14} color={titleColor ??appColors.background} />
                     <TextComponent text={renderPrice(item.showTimes[0])} title size={13} color={`${appColors.primary}`} />
-                    <RowComponent styles={{ flexWrap: 'wrap' }}>
+                    <RowComponent styles={{ flexWrap: 'wrap' ,justifyContent:'flex-start'}}>
                         {
 
                             <View style={{ paddingVertical: 2 }} key={item.category?._id}>
                                 <TagComponent
                                     title={item.category.name}
-                                    
+                                    bgColor={appColors.primary}
+                                    textSize={8}
+
                                 />
                             </View>
                         }
